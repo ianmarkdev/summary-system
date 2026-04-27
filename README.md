@@ -9,7 +9,7 @@ A Laravel 12 application that lets support and operations teams submit, triage, 
 | Choice | Rationale |
 |---|---|
 | **Laravel 12** | Mature, convention-driven PHP framework; clean DI container, Eloquent ORM, and form-request validation map naturally onto the requirements. |
-| **SQLite** | Zero-configuration relational database — ships inside the repo, no external service required for local evaluation. Schema is fully relational (indexed by status/priority/category/escalated), so swapping to PostgreSQL/MySQL is one `.env` change. |
+| **MySQL** | Fully relational database with strong production credentials. Chosen for its widespread availability, robust indexing (status/priority/category/escalated), and native support in XAMPP/Laravel. Connection details live in `.env` — switching to PostgreSQL is a one-line change. |
 | **No extra Composer packages** | AI integration uses Laravel's built-in `Http` facade (Guzzle wrapper) for the Anthropic API call. No SDK dependency to install — the fallback path requires nothing external at all. |
 
 ---
@@ -39,13 +39,20 @@ composer install
 cp .env.example .env
 php artisan key:generate
 
-# 3. Run migrations (SQLite, no server needed)
+# 3. Create the MySQL database (run once)
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS laravel_assessment CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
+# 4. Set your credentials in .env if needed
+#    DB_USERNAME=root
+#    DB_PASSWORD=your_password
+
+# 5. Run migrations
 php artisan migrate
 
-# 4. (Optional) Seed 10 realistic demo issues
+# 6. (Optional) Seed 10 realistic demo issues
 php artisan db:seed
 
-# 5. Start the development server
+# 7. Start the development server
 php artisan serve
 ```
 
